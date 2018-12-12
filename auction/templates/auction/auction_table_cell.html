@@ -1,0 +1,11 @@
+{% extends "users/base.html" %}
+{% block content %}
+<div class="card mb-3">
+    <img class="card-img-top" src={{ auction.image.url }} alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">{{ auction.title }} - ${{ auction.end_price }}</h5>
+      <p class="card-text">{{ auction.description }}</p>
+      <p class="card-text"><small class="text-muted">Last bidder: {{ bid.bidder}}, time: {{ bid.bid_placed_time} }</small></p>
+    </div>
+  </div>
+{% endblock content %}

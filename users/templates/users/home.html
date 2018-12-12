@@ -1,0 +1,36 @@
+{% extends "users/base.html" %}
+{% block content %}
+<div class="content-section">
+    <div class="media">
+        <h2 class="account-heading">Welcome {{ request.user.username }}!</h2>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="content-section">
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-light"><a href="/user/watchlist">My Watchlist</a></li>
+          <li class="list-group-item list-group-item-light"><a href="{% url 'my_selling_auctions' %}">My Selling Auctions</a></li>
+          <li class="list-group-item list-group-item-light"><a href="{% url 'my_bids' %}">My Bids</a></li>
+          <li class="list-group-item list-group-item-light"><a href="/customersupport/supportmessage/new">Customer Support</a></li>
+          
+        </ul>
+    </div>
+  </div>
+    <!--
+      {% for auction in auctions %}
+          <article class="media content-section">
+            <div class="media-body">
+              <h2><a class="article-title" href="#">{{ auction.title }}</a></h2>
+            </div>
+          </article>
+      {% endfor %}
+  
+      {% for watchlist_item in watchlist %}
+          <article class="media content-section">
+            <div class="media-body">
+              <h2><a class="article-title" href="#">{{ watchlist_item }}</a></h2>
+            </div>
+          </article>
+      {% endfor %}
+    -->
+{% endblock content %}

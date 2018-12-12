@@ -1,0 +1,35 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{ user.profile.image.url }}">
+        <div class="media-body">
+          <h2 class="account-heading">{{ user.username }}</h2>
+          <p class="text-secondary">{{ user.email }}</p>
+        </div>
+      </div>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Profile Info</legend>
+                {{ u_form|crispy }}
+                {{ p_form|crispy }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Update</button>
+            </div>
+        </form>
+    </div>
+    <div>
+            <form action="{% url 'delete-user' %}" method="POST" id="user_delete">
+                {% csrf_token %}
+            </form>
+            
+            <form action="{% url 'disable-user' %}" method="POST" id="user_disable">
+                    {% csrf_token %}
+            </form>
+            <!-- hacky side by side buttons -->
+            <button form="user_delete" value="Submit" type="Submit" class="btn btn-danger">Delete My User</button>  <button form="user_disable" value="Submit" type="Submit" class="btn btn-danger">Deactivate My User</button>    
+        </div>
+{% endblock content %}

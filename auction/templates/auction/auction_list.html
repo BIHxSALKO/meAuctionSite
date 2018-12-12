@@ -1,0 +1,68 @@
+{% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <br>
+  {% if my_bids %}
+  <h1 class='text-center'>My Bids</h1>
+{% elif my_auctions %}
+  <h1 class='text-center'>My Active Auctions</h1>
+{% else %}
+  <h1 class='text-center'>Search Results</h1>
+  {% crispy search_category %}
+{% endif %}
+  <div class="row">
+    <div class="col-sm-8 offset-sm-2">
+
+      <ul class="list-group">
+        {% for auction in auctions %}
+            {% if auction.isActive or my_auctions %}
+        <li class="list-group-item">
+          {% if auction.image %}
+              <a href="{% url 'auction_detail' auction.id %}"><img src={{ auction.image.url}} style="width:150px;" class="img-fluid" alt="No image"></a>
+          {% else %}
+              <a href="{% url 'auction_detail' auction.id %}"><img src="/media/photos/None.jpg" style="width:150px" class="img-fluid" alt="No image"></a>
+          {% endif %}
+
+          <ul class="normallist" style="display: inline-block">
+              <b><a href="{% url 'auction_detail' auction.id %}">{{ auction }}</a></b>
+              <li>Seller: {{ auction.seller }}</li>
+              {% if my_bids %}
+              <li><i>My highest bid: ${{ auction.start_price }}</i></li>
+              {% endif %}
+              <li><i>Current bid: ${{ auction.end_price }}</i></li>
+              <li><i>Buy now price: ${{ auction.buy_it_now_price }}</i></li>
+              {% if not auction.isActive %}
+                <li><b><i>Auction not yet active</i></b></li>
+              {% endif %}
+          </ul>
+        </li>
+            {% endif %}
+        {% endfor %}
+      </ul>
+
+      <div class="pagination">
+          <span class="step-links">
+              {% if auctions.has_previous %}
+                  <a href="?page=1&{{params}}">&laquo; first</a>
+                  <a href="?page={{ auctions.previous_page_number }}&{{params}}">previous</a>
+              {% endif %}
+
+              <span class="current">
+                  Page {{ auctions.number }} of {{ auctions.paginator.num_pages }}.
+              </span>
+
+              {% if auctions.has_next %}
+                  <a href="?page={{ auctions.next_page_number }}&{{params}}">next</a>
+                  <a href="?page={{ auctions.paginator.num_pages }}&{{params}}">last &raquo;</a>
+              {% endif %}
+          </span>
+      </div>
+    <br>
+    <br>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

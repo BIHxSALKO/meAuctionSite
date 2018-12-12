@@ -1,0 +1,66 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+<style>
+  .asteriskField {
+    display: none;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+  <article class="media content-section">
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="#">{{ auction.seller }}</a>
+        {% if auction.isFlagged == False %}
+        {% crispy flag_form %}
+        {% else %}
+         <button type="button" class="btn btn-danger" style="float: right">This item is flagged</button>
+        {% endif %}
+      {% if not auction.isActive %}
+          <b><i>Auction is not currently active</i></b>
+      {% endif %}
+        <h2 class="article-title">{{ auction.title }}</h2>
+        <small class="text-muted">Posted: {{ auction.start_time }}</small>
+      <br>
+      {% if auction.image %}
+        <img src={{ auction.image.url }} class="img-fluid" alt="No image for this item">
+      {% else %}
+        <img src="/media/photos/None.jpg" class="img-fluid" alt="No image for this item">
+      {% endif %}
+      <br>
+
+        <small class="text-muted">Last bid: {{ auction.end_time }}</small>
+      </div>
+      <h3 class="article-title">Current bid: ${{ auction.end_price }}</h3>
+      <h3 class="article-title">Buy Now Price: ${{ auction.buy_it_now_price }}</h3>
+      <p class="article-content">{{ auction.description }}</p>
+
+      <h5 class="article-title">Tags</h5>
+      {% for category in auction.categories.all %}
+      <a href="#" class="badge badge-secondary">{{ category }}</a>
+      {% endfor %}
+      <br>
+
+      {% if request.user != auction.seller %}
+         {% if auction.isActive %}
+             {% crispy bid_form %}
+             {% crispy buy_now %}
+         {% endif %}
+      {% else %}
+      <a class="btn btn-warning" href="/auction/update/{{auction.pk}}" style="color: white">Update Item</a>
+
+        {% if auction.start_price == auction.end_price %}
+        <form action="{% url 'delete_auction' %}" method="post" id="form_delete">
+            {% csrf_token %}
+          <input type="hidden" name="auction_hede" value={{ auction.pk }}><br>
+        </form>
+        <button form="form_delete" value="Submit" type="submit" class="btn btn-danger" action=>Delete this auction</button>
+        {% endif %}
+      {% endif %}
+
+    </div>
+  </article>
+{% endblock content %}

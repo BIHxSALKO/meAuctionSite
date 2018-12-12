@@ -1,0 +1,55 @@
+{% extends 'users/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <br>
+  <h1 class='text-center'>Cart</h1>
+  <div class="row">
+    <div class="col-sm-8 offset-sm-2">
+
+      <ul class="list-group">
+        {% for auction in cart_items %}
+        <li class="list-group-item">
+          {% if auction.image %}
+              <a href="{% url 'auction_detail' auction.id %}"><img src={{ auction.image.url}} style="width:150px;" class="img-fluid" alt="No image"></a>
+          {% else %}
+              <a href="{% url 'auction_detail' auction.id %}"><img src="/media/photos/None.jpg" style="width:150px" class="img-fluid" alt="No image"></a>
+          {% endif %}
+
+          <ul class="normallist" style="display: inline-block">
+              <b><a href="{% url 'auction_detail' auction.id %}">{{ auction }}</a></b>
+              <li>Seller: {{ auction.seller }}</li>
+              <li><i>Price: ${{ auction.end_price }}</i></li>
+          </ul>
+        </li>
+        {% endfor %}
+      </ul>
+
+      <div class="pagination">
+          <span class="step-links">
+              {% if auctions.has_previous %}
+                  <a href="?page=1&{{params}}">&laquo; first</a>
+                  <a href="?page={{ auctions.previous_page_number }}&{{params}}">previous</a>
+              {% endif %}
+
+              <span class="current">
+                  Page {{ auctions.number }} of {{ auctions.paginator.num_pages }}.
+              </span>
+
+              {% if auctions.has_next %}
+                  <a href="?page={{ auctions.next_page_number }}&{{params}}">next</a>
+                  <a href="?page={{ auctions.paginator.num_pages }}&{{params}}">last &raquo;</a>
+              {% endif %}
+          </span>
+      </div>
+    {% if cart_items|length > 0 %}
+        <br>
+        {% crispy checkout_cart %}
+        Total: ${{ cart.total }}
+    {% endif %}
+
+    </div>
+  </div>
+</div>
+{% endblock %}
